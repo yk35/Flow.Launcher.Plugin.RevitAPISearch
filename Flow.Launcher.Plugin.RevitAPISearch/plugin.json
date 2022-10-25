@@ -1,0 +1,12 @@
+{
+    "ID": "84924261-16A9-427E-88B6-B8A5F8E6D72C",
+    "ActionKeyword": "ra",
+    "Name": "RevitAPI Search",
+    "Description": "Search RevitAPI using RevitAPIDocs",
+    "Author": "yk35",
+    "Version": "1.0.0",
+    "Language": "csharp",
+    "Website": "https://github.com/yk35/Flow.Launcher.Plugin.RevitAPISearch",
+    "IcoPath": "icon.png",
+    "ExecuteFileName": "Flow.Launcher.Plugin.RevitAPISearch.dll"
+}
