@@ -35,8 +35,9 @@ namespace Flow.Launcher.Plugin.RevitAPISearch
                     var json = File.ReadAllText(_settingsPath);
                     _settings = JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _context.API.LogError("RevitAPISearch", $"Failed to load settings from {_settingsPath}: {ex.Message}");
                     _settings = new Settings();
                 }
             }
