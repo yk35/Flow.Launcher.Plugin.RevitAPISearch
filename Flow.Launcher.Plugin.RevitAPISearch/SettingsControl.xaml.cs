@@ -17,21 +17,22 @@ namespace Flow.Launcher.Plugin.RevitAPISearch
             _plugin = plugin;
             _settings = settings;
 
-            VersionComboBox.SelectedIndex = VersionToIndex(_settings.DefaultVersion);
+            VersionComboBox.SelectedIndex = VersionToIndex(_settings.DefaultVersion) >= 0 
+                ? VersionToIndex(_settings.DefaultVersion) 
+                : 0; // Default to the first item if the version is not found
         }
 
-        private static int VersionToIndex(string version)
+        private int VersionToIndex(string version)
         {
-            switch ($"R{version}")
+            string versionString = $"R{version}";
+            for (int i = 0; i < VersionComboBox.Items.Count; i++)
             {
-                case "R2022": return 0;
-                case "R2023": return 1;
-                case "R2024": return 2;
-                case "R2025": return 3;
-                case "R2025.3": return 4;
-                case "R2026": return 5;
-                default: return 1;
+                if (VersionComboBox.Items[i] is ComboBoxItem item && item.Content.ToString() == versionString)
+                {
+                    return i;
+                }
             }
+            return -1; // Return -1 if the version is not found
         }
 
         private void VersionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
