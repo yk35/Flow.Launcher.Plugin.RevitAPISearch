@@ -13,6 +13,11 @@ using Flow.Launcher.Plugin.SharedCommands;
 
 namespace Flow.Launcher.Plugin.RevitAPISearch
 {
+    /// <summary>
+    /// Represents a plugin for searching Revit API documentation via a web-based interface.
+    /// This class implements IAsyncPlugin and ISettingProvider, enabling asynchronous query processing
+    /// and the ability to manage user settings.
+    /// </summary>
     public class RevitAPISearch : IAsyncPlugin, ISettingProvider
     {
         private PluginInitContext _context;
@@ -22,6 +27,12 @@ namespace Flow.Launcher.Plugin.RevitAPISearch
         private HttpClient _httpClient;
         private Settings _settings;
         private string _settingsPath;
+
+        /// <summary>
+        /// Initializes the plugin asynchronously by setting up necessary context, loading settings, and preparing resources.
+        /// </summary>
+        /// <param name="context">The plugin initialization context providing metadata and API functionality.</param>
+        /// <returns>A task representing the asynchronous initialization operation.</returns>
         public Task InitAsync(PluginInitContext context)
         {
             _context = context;
@@ -37,7 +48,7 @@ namespace Flow.Launcher.Plugin.RevitAPISearch
                 }
                 catch (Exception ex)
                 {
-                    _context.API.LogError("RevitAPISearch", $"Failed to load settings from {_settingsPath}: {ex.Message}");
+                    _context.API.LogException(this.GetType().Name, $"Failed to load settings from {_settingsPath}: {ex.Message}", ex);
                     _settings = new Settings();
                 }
             }
@@ -50,6 +61,12 @@ namespace Flow.Launcher.Plugin.RevitAPISearch
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Executes an asynchronous query against the Revit API documentation and retrieves search results.
+        /// </summary>
+        /// <param name="query">The query object containing search terms and parameters to process the request.</param>
+        /// <param name="token">A cancellation token to signal the operation should be canceled.</param>
+        /// <returns>A task that represents the asynchronous query operation, returning a list of results.</returns>
         public async Task<List<Result>> QueryAsync(Query query, CancellationToken token)
         {
             string version = _settings.DefaultVersion;
@@ -120,6 +137,10 @@ namespace Flow.Launcher.Plugin.RevitAPISearch
             int total_results,
             bool truncated);
 
+        /// <summary>
+        /// Saves the current plugin settings to a persistent storage file.
+        /// This method serializes the settings object and writes it to the configured file path.
+        /// </summary>
         public void SaveSettings()
         {
             if (string.IsNullOrEmpty(_settingsPath))
@@ -136,6 +157,10 @@ namespace Flow.Launcher.Plugin.RevitAPISearch
             }
         }
 
+        /// <summary>
+        /// Creates and returns a settings panel for the plugin, facilitating user configuration of plugin settings.
+        /// </summary>
+        /// <returns>A Control representing the settings panel UI.</returns>
         public Control CreateSettingPanel()
         {
             return new SettingsControl(this, _settings);
